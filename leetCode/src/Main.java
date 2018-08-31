@@ -1,3 +1,4 @@
+import algorithm.KSEinBST;
 import algorithm.RandomOrder;
 import algorithm.RemoveElem;
 
@@ -12,5 +13,8 @@ public class Main {
         System.out.println(removeElem.removeElem(a,2));
         RandomOrder randomOrder = new RandomOrder();
         System.out.println(randomOrder.orderChar("3Z4"));
+        KSEinBST ksEinBST = new KSEinBST();
+        Object[] b = new Object[]{5,3,6,2, 4, null,null,1};
+        System.out.println(ksEinBST.kthSmallest(b,3));
     }
 }
