@@ -1,6 +1,7 @@
 import algorithm.KSEinBST;
 import algorithm.RandomOrder;
 import algorithm.RemoveElem;
+import java8.MyMathUtils;
 
 /**
  * Created by hui10.yang on 18/8/30.
@@ -16,5 +17,7 @@ public class Main {
         KSEinBST ksEinBST = new KSEinBST();
         Object[] b = new Object[]{5,3,6,2, 4, null,null,1};
         System.out.println(ksEinBST.kthSmallest(b,3));
+        MyMathUtils.primes(10).forEach(n->System.out.println(n));
+
     }
 }
