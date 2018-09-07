@@ -1,5 +1,13 @@
 package java8;
 
+import javafx.scene.shape.Path;
+
+import javax.xml.bind.SchemaOutputResolver;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,6 +31,15 @@ public class Java8Test {
         Collections.sort(students,Comparator.comparing(Student::getAge));
         //逆序
         Collections.sort(students,Comparator.comparing(Student::getAge).reversed());
+
+        String join = String.join(", ", "zhangsan", "lisi", "wangwu");
+        System.out.println(join);
+
+        try {
+            Files.lines(Paths.get("/Users/trade.vip/Desktop/域名及git地址.txt"), StandardCharsets.UTF_8).flatMap(str->Arrays.stream(str.split("\n"))).forEach(n->System.out.println(n));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         System.out.println(students.toString());
 
