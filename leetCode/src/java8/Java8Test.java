@@ -1,10 +1,7 @@
 package java8;
 
-import javafx.scene.shape.Path;
 
-import javax.xml.bind.SchemaOutputResolver;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -40,6 +37,11 @@ public class Java8Test {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        int[] ones = new int[10];
+        Arrays.fill(ones, 1);
+        Arrays.parallelPrefix(ones, (a, b) -> a + b);
+        Arrays.stream(ones).forEach(value -> System.out.println(value));
 
         System.out.println(students.toString());
 
