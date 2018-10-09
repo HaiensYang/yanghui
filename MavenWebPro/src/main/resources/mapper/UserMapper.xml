@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smh.dao.UserDAO">
+    <!--auto generated Code-->
+    <resultMap id="AllColumnMap" type="com.smh.entity.User">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="addr" property="addr"/>
+        <result column="age" property="age"/>
+    </resultMap>
+
+    <!--auto generated Code-->
+    <sql id="all_column">
+        `name`,
+        `addr`,
+        `age`
+    </sql>
+
+    <!--auto generated Code-->
+    <insert id="insert" parameterType="com.smh.entity.User">
+        INSERT INTO user (
+            `name`,
+            `addr`,
+            `age`
+        ) VALUES (
+            #{name},
+            #{addr},
+            #{age}
+        )
+    </insert>
+
+    <delete id="delete" parameterType="com.smh.entity.User">
+        delete from user where id=#{id}
+    </delete>
+</mapper>
+
