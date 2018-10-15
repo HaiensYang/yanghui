@@ -1,4 +1,4 @@
-package com.smh.aop;
+package com.smh.aop.impl;
 
 import com.smh.dao.PersonDAO;
 import com.smh.dao.UserDAO;

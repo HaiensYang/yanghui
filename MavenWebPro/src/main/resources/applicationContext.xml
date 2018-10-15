@@ -2,8 +2,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:p="http://www.springframework.org/schema/p"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <!-- 自动扫描装配 -->
     <context:component-scan base-package="com.smh">
@@ -47,11 +47,28 @@
         <property name="annotationClass" value="org.springframework.stereotype.Repository"/>
     </bean>
 
-
+    <bean id="target" class="com.smh.aop.impl.ForumServiceImpl"></bean>
+    <bean id="advice" class="com.smh.aop.impl.BeforeAdvice"/>
+    <bean id="afterAdvice" class="com.smh.aop.impl.AfterAdvice"/>
+    <bean id="roundAdvice" class="com.smh.aop.impl.RoundAdvice"/>
+    <bean id="exceptionAdvice" class="com.smh.aop.impl.ExceptionAdvice"/>
+    <bean id="conIntro" class="com.smh.aop.impl.ControlIntroduce"/>
+    <bean id="forum" class="org.springframework.aop.framework.ProxyFactoryBean"
+          p:interfaces="com.smh.aop.Monitor" p:target-ref="target" p:interceptorNames="conIntro" p:proxyTargetClass="true"/>
 
     <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
+
+    <!--<aop:config>-->
+        <!--<aop:pointcut id="execute" expression="execution(* com.smh.aop.*Service.*(..))"/>-->
+
+        <!--<aop:advisor advice-ref="roundAdvice" pointcut-ref="execute"/>-->
+    <!--</aop:config>-->
+
+
+    <!--&lt;!&ndash; 扫描整个项目 关联注解类和实现类 &ndash;&gt;-->
+    <!--<aop:aspectj-autoproxy />-->
 
     <tx:annotation-driven transaction-manager="transactionManager" />
 
