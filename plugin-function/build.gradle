@@ -5,3 +5,28 @@
 dependencies {
     implementation  fileTree(dir: 'lib', include: ['*.jar'])
 }
+task copyFile(type:Copy,dependsOn: ["build"]){
+    from "$buildDir/libs"
+    from "$projectDir/lib"
+    from "$projectDir/plugin.xml"
+    into file("$buildDir/temp/fr-"+"$project.name"+"-$project.version")
+}
+
+task zip(type:Zip,dependsOn:["copyFile"]){
+    from "$buildDir/temp"
+    destinationDir file("$buildDir/install")
+    //生成的文件名: baseName-appendix-0.0.1.zip
+//    baseName 'baseName'
+//    appendix 'appendix'
+//    version '0.0.1'
+}
+//先清理再build
+build.mustRunAfter clean
+//控制build时包含哪些文件,排除哪些文件
+processResources {
+//    exclude everything
+//    用*.css没效果
+//    exclude '**/*.css'
+//    except this file
+//    include 'xx.xml'
+}
