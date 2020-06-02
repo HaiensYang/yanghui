@@ -45,9 +45,12 @@ dependencies {
     implementation 'org.swingexplorer:swexpl:2.0'
     implementation 'org.swingexplorer:swag:1.0'
     implementation 'org.apache.tomcat:tomcat-catalina:8.5.32'
+    implementation 'org.apache.tomcat:tomcat-jasper:8.5.32'
     implementation 'mysql:mysql-connector-java:5.1.44'
     implementation 'com.fr.third:jxbrowser:6.23.1'
     implementation 'com.fr.third:jxbrowser-mac:6.23.1'
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    implementation 'org.slf4j:slf4j-simple:1.7.30'
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.easymock:easymock:3.5.1'
 }
