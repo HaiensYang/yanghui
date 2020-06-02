@@ -3,7 +3,7 @@
 完全傻瓜化的配置，开箱即用。
 
 ## 安装gradle
-用于构建开发工程和插件包，文档参考：https://wiki.jikexueyuan.com/project/gradle-2-user-guide/installing.html
+用于构建开发工程和插件包，gradle安装文档参考：https://wiki.jikexueyuan.com/project/gradle-2-user-guide/installing.html
 
 ## 配置开发工程
 直接使用IntelliJ IDEA打开这个目录即可。
