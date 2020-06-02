@@ -27,7 +27,7 @@ sourceCompatibility = '8'
 
 sourceSets {
     main {
-        java.outputDir = file("$projectDir/../webroot/WEB-INF/lib/plugins/plugin-" + pluginName + "-1.0/classes")
+        java.outputDir = file("$projectDir/../webroot/WEB-INF/plugins/plugin-" + pluginName + "-1.0/classes")
     }
 }
 

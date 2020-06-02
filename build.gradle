@@ -1,7 +1,5 @@
 
-
 apply plugin: 'java'
-apply plugin: 'maven-publish'
 
 /**
  * 可以修改这个变量以依赖不同的开发版本
@@ -28,6 +26,7 @@ task install(type: Copy) {
 }
 
 dependencies {
+    compile files("${System.getProperty('java.home')}/../lib/tools.jar")
     implementation 'com.fr.third:fine-third:' + fineVersion
     implementation 'com.fr.activator:fine-activator:' + fineVersion
     implementation 'com.fr.core:fine-core:' + fineVersion
