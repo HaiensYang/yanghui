@@ -25,12 +25,12 @@ task install(type: Copy) {
     from configurations.runtimeClasspath
 }
 
-def isWindows() {
+static def isWindows() {
     return org.gradle.internal.os.OperatingSystem.current().isWindows()
 }
 
 dependencies {
-    compile files("${System.getProperty('java.home')}/../lib/tools.jar")
+    implementation files("${System.getProperty('java.home')}/../lib/tools.jar")
     implementation 'com.fr.third:fine-third:' + fineVersion
     implementation 'com.fr.activator:fine-activator:' + fineVersion
     implementation 'com.fr.core:fine-core:' + fineVersion
