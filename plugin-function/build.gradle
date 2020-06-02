@@ -13,12 +13,14 @@ ext {
     /**
      * 是否对插件的class进行加密保护，防止反编译
      */
-    guard = true
+    guard = false
 
     def pluginInfo = getPluginInfo()
     pluginPre = "fine-plugin"
     pluginName = pluginInfo.id
     pluginVersion = pluginInfo.version
+
+    outputPath = "$projectDir/../webroot/WEB-INF/plugins/plugin-" + pluginName + "-1.0/classes"
 }
 
 group = 'com.fr.plugin'
@@ -27,7 +29,8 @@ sourceCompatibility = '8'
 
 sourceSets {
     main {
-        java.outputDir = file("$projectDir/../webroot/WEB-INF/plugins/plugin-" + pluginName + "-1.0/classes")
+        java.outputDir = file(outputPath)
+        output.resourcesDir = file(outputPath)
     }
 }
 
@@ -42,8 +45,9 @@ ant.references["compile.classpath"] = ant.path {
 classes.dependsOn('clean')
 
 task copyFiles(type: Copy,dependsOn: 'classes'){
-    from "$buildDir/classes/java/main"
-    from "$buildDir/resources/main"
+//    from "$buildDir/classes/java/main"
+//    from "$buildDir/resources/main"
+    from outputPath
     into "$projectDir/classes"
 }
 
