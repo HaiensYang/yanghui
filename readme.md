@@ -30,7 +30,7 @@
 执行命令：```gradle zip```即可构建插件包，插件包位置位于插件目录/build/install下。
 
 ## 增加新的插件
-将插件源码目录放到跟目录下，同时修改settings.gradle文件，再刷新gradle配置即可。
+将插件源码目录放到根目录下，同时修改settings.gradle文件，再刷新gradle配置即可。
 
 ## 修改依赖的jar版本
 只需要更改build.gradle中的fineVersion变量即可。
