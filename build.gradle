@@ -25,6 +25,10 @@ task install(type: Copy) {
     from configurations.runtimeClasspath
 }
 
+def isWindows() {
+    return org.gradle.internal.os.OperatingSystem.current().isWindows()
+}
+
 dependencies {
     compile files("${System.getProperty('java.home')}/../lib/tools.jar")
     implementation 'com.fr.third:fine-third:' + fineVersion
@@ -48,7 +52,7 @@ dependencies {
     implementation 'org.apache.tomcat:tomcat-jasper:8.5.32'
     implementation 'mysql:mysql-connector-java:5.1.44'
     implementation 'com.fr.third:jxbrowser:6.23.1'
-    implementation 'com.fr.third:jxbrowser-mac:6.23.1'
+    implementation group:"com.fr.third", name: isWindows() ? "jxbrowser-win64" :"jxbrowser-mac",version:"6.23.1"
     implementation 'org.slf4j:slf4j-api:1.7.30'
     implementation 'org.slf4j:slf4j-simple:1.7.30'
     testImplementation 'junit:junit:4.12'
