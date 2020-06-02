@@ -4,3 +4,7 @@
 /download/
 /webroot/
 .DS_Store
+.gradle
+build
+local.properties
+classes/

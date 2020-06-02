@@ -16,7 +16,7 @@ ext {
     /**
      * 是否对插件的class进行加密保护，防止反编译
      */
-    guard = true
+    guard = false
 
     def pluginInfo = getPluginInfo()
     pluginPre = "fine-plugin"
