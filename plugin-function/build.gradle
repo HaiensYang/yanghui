@@ -1,9 +1,6 @@
-import org.codehaus.groovy.runtime.GStringImpl
 
-plugins {
-    id 'java'
-    id 'maven-publish'
-}
+apply plugin: 'java'
+
 
 ext {
     /**
@@ -11,7 +8,7 @@ ext {
      * 1.如果依赖的jar需要打包到zip中,放置在lib根目录下
      * 2.如果依赖的jar仅仅是编译时需要，防止在lib下子目录下即可
      */
-    libPath = "$projectDir/../webroot/WEB-INF/lib" as GStringImpl
+    libPath = "$projectDir/../webroot/WEB-INF/lib"
 
     /**
      * 是否对插件的class进行加密保护，防止反编译
@@ -27,6 +24,12 @@ ext {
 group = 'com.fr.plugin'
 version = '10.0'
 sourceCompatibility = '8'
+
+sourceSets {
+    main {
+        java.outputDir = file("$projectDir/../webroot/WEB-INF/lib/plugins/plugin-" + pluginName + "-1.0/classes")
+    }
+}
 
 ant.importBuild("encrypt.xml")
 //定义ant变量
