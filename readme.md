@@ -15,7 +15,7 @@
 ### 复制插件配置
 
 * 将plugin.xml文件复制到webroot/WEB-INF/plugins/plugin-xyz-1.0目录下，其中xyz一般用插件id表示。
-* 在开发工具内部，手动编译插件class文件到插件目录，注意可能需要修改插件的pom.xml的文件
+* 在开发工具内部，手动编译插件class文件到插件目录
 ![compile](screenshots/compile.png)
 
 ### 启动设计器
