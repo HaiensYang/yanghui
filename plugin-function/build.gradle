@@ -13,7 +13,7 @@ ext {
     /**
      * 是否对插件的class进行加密保护，防止反编译
      */
-    guard = false
+    guard = true
 
     def pluginInfo = getPluginInfo()
     pluginPre = "fine-plugin"
@@ -27,12 +27,10 @@ group = 'com.fr.plugin'
 version = '10.0'
 sourceCompatibility = '8'
 
-if (!guard) {
-    sourceSets {
-        main {
-            java.outputDir = file(outputPath)
-            output.resourcesDir = file(outputPath)
-        }
+sourceSets {
+    main {
+        java.outputDir = file(outputPath)
+        output.resourcesDir = file(outputPath)
     }
 }
 
@@ -47,27 +45,23 @@ ant.references["compile.classpath"] = ant.path {
 classes.dependsOn('clean')
 
 task copyFiles(type: Copy,dependsOn: 'classes'){
-    if (guard) {
-        from "$buildDir/classes/java/main"
-        from "$buildDir/resources/main"
-    } else {
-        from outputPath
-    }
+    from outputPath
     into "$projectDir/classes"
 }
 
 task preJar(type:Copy,dependsOn: guard ? 'compile_encrypt_javas' : 'compile_plain_javas'){
     from "$projectDir/classes"
-    into "$buildDir/classes/java/main"
+    into "$projectDir/transform-classes"
     include "**/*.*"
     doLast(){
         delete file("$projectDir/classes")
+        delete file("$projectDir/transform-classes")
     }
 }
 jar.dependsOn("preJar")
 
 task makeJar(type: Jar,dependsOn: preJar){
-    from fileTree(dir:guard ? "$buildDir/classes/java/main" : outputPath)
+    from fileTree(dir: "$projectDir/transform-classes")
     baseName pluginPre
     appendix pluginName
     version pluginVersion
