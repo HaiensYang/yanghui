@@ -27,10 +27,12 @@ group = 'com.fr.plugin'
 version = '10.0'
 sourceCompatibility = '8'
 
-sourceSets {
-    main {
-        java.outputDir = file(outputPath)
-        output.resourcesDir = file(outputPath)
+if (!guard) {
+    sourceSets {
+        main {
+            java.outputDir = file(outputPath)
+            output.resourcesDir = file(outputPath)
+        }
     }
 }
 
@@ -45,16 +47,19 @@ ant.references["compile.classpath"] = ant.path {
 classes.dependsOn('clean')
 
 task copyFiles(type: Copy,dependsOn: 'classes'){
-//    from "$buildDir/classes/java/main"
-//    from "$buildDir/resources/main"
-    from outputPath
+    if (guard) {
+        from "$buildDir/classes/java/main"
+        from "$buildDir/resources/main"
+    } else {
+        from outputPath
+    }
     into "$projectDir/classes"
 }
 
 task preJar(type:Copy,dependsOn: guard ? 'compile_encrypt_javas' : 'compile_plain_javas'){
     from "$projectDir/classes"
     into "$buildDir/classes/java/main"
-    include "**/*.class"
+    include "**/*.*"
     doLast(){
         delete file("$projectDir/classes")
     }
@@ -62,7 +67,7 @@ task preJar(type:Copy,dependsOn: guard ? 'compile_encrypt_javas' : 'compile_plai
 jar.dependsOn("preJar")
 
 task makeJar(type: Jar,dependsOn: preJar){
-    from fileTree(dir:"$buildDir/classes/java/main")
+    from fileTree(dir:guard ? "$buildDir/classes/java/main" : outputPath)
     baseName pluginPre
     appendix pluginName
     version pluginVersion
