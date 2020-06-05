@@ -53,10 +53,6 @@ task preJar(type:Copy,dependsOn: guard ? 'compile_encrypt_javas' : 'compile_plai
     from "$projectDir/classes"
     into "$projectDir/transform-classes"
     include "**/*.*"
-    doLast(){
-        delete file("$projectDir/classes")
-        delete file("$projectDir/transform-classes")
-    }
 }
 jar.dependsOn("preJar")
 
@@ -66,6 +62,11 @@ task makeJar(type: Jar,dependsOn: preJar){
     appendix pluginName
     version pluginVersion
     destinationDir = file("$buildDir/libs")
+
+    doLast(){
+        delete file("$projectDir/classes")
+        delete file("$projectDir/transform-classes")
+    }
 }
 
 task copyFile(type: Copy,dependsOn: ["makeJar"]){
@@ -78,7 +79,7 @@ task copyFile(type: Copy,dependsOn: ["makeJar"]){
 }
 
 task zip(type:Zip,dependsOn:["copyFile"]){
-    from "$buildDir/temp"
+    from "$buildDir/temp/plugin"
     destinationDir file("$buildDir/install")
     baseName pluginPre
     appendix pluginName
