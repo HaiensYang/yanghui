@@ -21,9 +21,9 @@
 ![compile](screenshots/compile.png)
 
 ### 启动设计器
-如果希望正常的进行插件开发，使用```com.fr.learn.Leaner```启动设计器。
+如果希望正常的进行插件开发，使用```com.fr.learn.Learner```启动设计器。
 
-如果希望进行设计器调试，则使用```com.fr.learn.Leaner4Debug```启动设计器。
+如果希望进行设计器调试，则使用```com.fr.learn.Learner4Debug```启动设计器。
 
 ### 选择报表运行环境
 一般情况启动设计器的时候，会自动使用上一次使用的报表运行环境，我们这里需要新建一个本地报表运行环境，并指向这个开发目录下的webroot/WEB-INF目录。
