@@ -5,7 +5,7 @@ import com.fr.log.FineLoggerFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class Leaner {
+public class Learner {
 
     static {
         // 这段代码让插件能支持远程设计的时候的调试
