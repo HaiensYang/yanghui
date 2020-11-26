@@ -2,14 +2,19 @@
     <id>com.fr.plugin.function.finance</id>
     <name><![CDATA[财务函数插件]]></name>
     <active>yes</active>
-    <version>1.0</version>
+    <version>2.0</version>
     <env-version>10.0</env-version>
     <jartime>2020-04-01</jartime>
     <vendor>yanghui</vendor>
     <description><![CDATA[可以实现Excel中的财务公式]]></description>
     <change-notes><![CDATA[
       [2020-07-13]初始化插件。<br/>
-    ]]></change-notes>
+    ]]>
+        <![CDATA[
+      [2020-11-28]新增PPMT,IPMT,PV,FV,NPV,NPER,MIRR函数。<br/>
+    ]]>
+
+    </change-notes>
 <!--    <extra-core>-->
 <!--        <FunctionDefineProvider class="com.fr.plugin.XIRR" name="xirr" description="不定期和不定金额年化收益率计算XIRR：第一个参数现金流；第二个对应还款日期列表"/>-->
 <!--        <LocaleFinder class="com.fr.plugin.FinanceFinder"/>-->
