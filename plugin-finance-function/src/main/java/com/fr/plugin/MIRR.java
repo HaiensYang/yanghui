@@ -35,8 +35,8 @@ public class MIRR extends AbstractFunction {
                 }
                 cashIn[i] = trans(ele).doubleValue();
             }
-            financeRate = trans(objects[1]).doubleValue();
-            reinvestRate = trans(objects[2]).doubleValue();
+            financeRate = trans(objects[2]).doubleValue();
+            reinvestRate = trans(objects[1]).doubleValue();
             return mirr(cashIn, financeRate, reinvestRate);
         }else {
             double[] cashIn = new double[objects.length - 2];

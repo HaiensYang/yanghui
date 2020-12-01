@@ -35,6 +35,9 @@ public class PPMT extends AbstractFunction {
         }else if (objects.length == 6) {
             double fv = trans(objects[4]).doubleValue();
             int type= trans(objects[5]).intValue();
+            if (type == 1 && per == 1) {
+                return Finance.pmt(rate, nper, pv, fv, type);
+            }
             return Finance.ppmt(rate,per,nper,pv,fv,type);
         }else {
             throw new RuntimeException("输入参数有误");
