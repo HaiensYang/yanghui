@@ -1,6 +1,6 @@
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.Reader;
+package com.smh.service;
+
+import java.io.*;
 import java.math.BigDecimal;
 import java.sql.Clob;
 import java.sql.Date;
@@ -15,20 +15,12 @@ import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.CellValue;
-import org.apache.poi.ss.usermodel.FillPatternType;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.FormulaEvaluator;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.formula.functions.T;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.util.PropertyPlaceholderHelper;
 
 /**
@@ -92,6 +84,158 @@ public class ExcelUtil {
 	//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	private static final int MAX_ROW = 100_0000; //一百万
 	//private DecimalFormat df = new DecimalFormat("0");             //数字格式，防止长数字成为科学计数法形式，或者int变为double形式
+
+	public static void main(String[] args) {
+		//文件路径
+		String filePath = "";
+		//将Excel中内容转换成指定对象集合
+		List<T> list = EasyPoiExcelUtil.importExcel(filePath, 0, 1, T.class);
+
+		//所有数据
+		List<List<Object>> data = new ArrayList<>();
+
+		//每行数据
+		List<Object> row = new ArrayList<>();
+		data.add(row);
+		//表头集合
+		List<String> title = new ArrayList<>();
+		//输出文件到指定目录
+		String outPath = "";
+		try (
+				FileOutputStream fos = new FileOutputStream(outPath)) {
+			//输出到字节流
+			ExcelUtil.exportFromList(title, data, fos);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	/**
+	 * 指定列合并单元格
+	 * @param cellLine 要合并的列
+	 * @param startRow 要合并列的开始行
+	 * @param targert 以哪个目标列为标准
+	 */
+
+	public void addMergedRegion(int cellLine, int startRow, int targert, InputStream inputStream) throws IOException {
+		//endRow 要合并列的结束行
+
+		SXSSFWorkbook wb = new SXSSFWorkbook(500);
+
+		XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+		SXSSFSheet sheet = wb.createSheet();
+
+		int endRow = sheet.getLastRowNum();
+		//列宽
+		int widthColumn = sheet.getLeftCol();
+		if (endRow < startRow) {
+			return;
+		}
+		if (cellLine > widthColumn-1) {
+			return;
+		}
+
+		// 获取第一行的数据,以便后面进行比较
+		Cell currentCell=sheet.getRow(startRow).getCell(cellLine);
+		Cell codeCell=sheet.getRow(startRow).getCell(targert);
+		String startContractCode=formatString(codeCell,cellLine);
+		String s_will=formatString(currentCell,cellLine);
+		int count = 0;
+		boolean flag = false;
+		for (int i = 2; i <= endRow; i++) {
+			String s_current = formatString(sheet.getRow(i).getCell(cellLine),cellLine);
+			String currentCode = formatString(sheet.getRow(i).getCell(targert),cellLine);
+			if (s_will.equals(s_current) && startContractCode.equals(currentCode)) {
+				s_will = s_current;
+				startContractCode = currentCode;
+				if (flag) {
+					CellRangeAddress cellAddresses = new CellRangeAddress(startRow - count, startRow, cellLine, cellLine);
+					if (cellAddresses.getNumberOfCells()>=2) {
+						sheet.addMergedRegion(cellAddresses);
+					}
+					Row row = sheet.getRow(startRow - count);
+					String cellValueTemp = formatString(sheet.getRow(startRow - count).getCell(cellLine),cellLine);
+					Cell cell = row.createCell(cellLine);
+					// 跨单元格显示的数据
+					cell.setCellValue(cellValueTemp);
+					cleanMergedCell(startRow - count, startRow, cellLine,sheet);
+					count = 0;
+					flag = false;
+
+				}
+				startRow = i;
+				count++;
+			} else {
+				flag = true;
+				s_will = s_current;
+				startContractCode = currentCode;
+			}
+			if (i == endRow && count > 0) {
+				CellRangeAddress cellAddresses = new CellRangeAddress(startRow - count, startRow, cellLine, cellLine);
+				if (cellAddresses.getNumberOfCells() >= 2) {
+					sheet.addMergedRegion(cellAddresses);
+				}
+				String cellValueTemp = formatString(sheet.getRow(startRow - count).getCell(cellLine),cellLine);
+				Row row = sheet.getRow(startRow - count);
+				Cell cell = row.createCell(cellLine);
+				// 跨单元格显示的数据
+				cell.setCellValue(cellValueTemp);
+				cleanMergedCell(startRow - count, startRow,cellLine,sheet);
+			}
+		}
+	}
+
+	/**
+	 * 得到单元格的数据以String返回
+	 * @param cell
+	 * @return
+	 */
+	public String formatString(Cell cell,int cellLine) {
+		CellType cellType= cell.getCellType();
+		//int cellType = cell.getCellType();
+		String s_will = "";
+		DecimalFormat df = new DecimalFormat("#0.00######");
+		if (cellType == CellType.NUMERIC) {
+			//项目期限特殊处理
+			if (cellLine == 6) {
+				DecimalFormat dfItemNum = new DecimalFormat("0");
+				s_will = dfItemNum.format(cell.getNumericCellValue());
+			}else {
+				s_will = df.format(cell.getNumericCellValue());
+			}
+
+		} else if (cellType == CellType.STRING) {
+			s_will = cell.getStringCellValue();
+		} else if (cellType == CellType.FORMULA) {
+			s_will = cell.getCellFormula();
+		} else if (cellType == CellType.BOOLEAN) {
+			s_will= String.valueOf(cell.getBooleanCellValue());
+		}
+		return s_will;
+	}
+
+	/**
+	 * 清空合并前单元格的内容除第一个外
+	 * @param start
+	 * @param end
+	 * @param cellLine
+	 */
+	public void cleanMergedCell(int start, int end, int cellLine,Sheet sheet) {
+		//指定的列合并后内容不清除
+
+			if (cellLine == 1 || cellLine == 2 || cellLine == 3 || cellLine == 4 || cellLine == 8 || cellLine == 9 || cellLine == 10 || cellLine == 11 || cellLine == 17 || cellLine == 18 || cellLine == 19 || cellLine == 20
+					|| cellLine == 21 || cellLine == 22 || cellLine == 23 || cellLine == 24 || cellLine == 25) {
+				return;
+			}
+
+
+		for (int i = start + 1; i <= end; i++) {
+			Row row = sheet.getRow(i);
+			row.createCell(cellLine);
+		}
+	}
+
 
 	/**
 	 * 多Sheet导出
