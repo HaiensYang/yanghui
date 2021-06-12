@@ -3,6 +3,7 @@ package com.fr.plugin;
 import com.fr.general.GeneralUtils;
 import com.fr.intelli.record.Focus;
 import com.fr.intelli.record.Original;
+import com.fr.plugin.context.PluginContexts;
 import com.fr.record.analyzer.EnableMetrics;
 import com.fr.script.AbstractFunction;
 import com.fr.stable.StringUtils;
@@ -17,6 +18,15 @@ public class PPMT extends AbstractFunction {
     @Override
     @Focus(id = "com.fr.plugin.function.finance", text = "Plugin-Test_Function_Finance", source = Original.PLUGIN)
     public Object run(Object[] objects) throws FormulaException {
+        if (PluginContexts.currentContext().isAvailable()) {
+            return cal(objects);
+        } else {
+            return "插件未激活，请购买使用";
+        }
+
+    }
+
+    private Object cal(Object[] objects) {
         // 各期利率 必需
         double rate = trans(objects[0]).doubleValue();
         // 指定期数 per 必需
@@ -42,7 +52,6 @@ public class PPMT extends AbstractFunction {
         }else {
             throw new RuntimeException("输入参数有误");
         }
-
     }
 
     private static BigDecimal trans(Object ele){

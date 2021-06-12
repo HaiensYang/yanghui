@@ -4,6 +4,7 @@ import com.fr.general.FArray;
 import com.fr.general.GeneralUtils;
 import com.fr.intelli.record.Focus;
 import com.fr.intelli.record.Original;
+import com.fr.plugin.context.PluginContexts;
 import com.fr.record.analyzer.EnableMetrics;
 import com.fr.script.AbstractFunction;
 import com.fr.stable.StringUtils;
@@ -28,6 +29,14 @@ public class XIRR extends AbstractFunction {
 	@Override
 	@Focus(id = "com.fr.plugin.function.finance", text = "Plugin-Test_Function_Finance", source = Original.PLUGIN)
 	public Object run(Object[] objects) throws FormulaException {
+		if (PluginContexts.currentContext().isAvailable()) {
+			return cal(objects);
+		} else {
+			return "插件未激活，请购买使用";
+		}
+	}
+
+	private Object cal(Object[] objects) {
 		try{
 			double guess = 0.1;
 			if (objects.length == 3) {

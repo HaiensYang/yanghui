@@ -3,6 +3,7 @@ package com.fr.plugin;
 import com.fr.general.GeneralUtils;
 import com.fr.intelli.record.Focus;
 import com.fr.intelli.record.Original;
+import com.fr.plugin.context.PluginContexts;
 import com.fr.record.analyzer.EnableMetrics;
 import com.fr.script.AbstractFunction;
 import com.fr.stable.StringUtils;
@@ -23,6 +24,15 @@ public class Rate extends AbstractFunction {
 	@Override
 	@Focus(id = "com.fr.plugin.function.finance", text = "Plugin-Test_Function_Finance", source = Original.PLUGIN)
 	public Object run(Object[] objects) throws FormulaException {
+		if (PluginContexts.currentContext().isAvailable()) {
+			return cal(objects);
+		} else {
+			return "插件未激活，请购买使用";
+		}
+
+	}
+
+	private Object cal(Object[] objects) {
 		//总期数
 		int nper = trans(objects[0]).intValue();
 		//每期付款金额
@@ -38,8 +48,8 @@ public class Rate extends AbstractFunction {
 			fv = trans(objects[3]).doubleValue();
 			return calculateRate(nper,pmt,pv,fv,type,guess);
 		} else if (objects.length == 5) {
-			 fv = trans(objects[3]).doubleValue();
-			 type=trans(objects[4]).doubleValue();
+			fv = trans(objects[3]).doubleValue();
+			type=trans(objects[4]).doubleValue();
 			return calculateRate(nper,pmt,pv,fv,type,guess);
 		} else if (objects.length == 6) {
 			fv = trans(objects[3]).doubleValue();
@@ -49,7 +59,6 @@ public class Rate extends AbstractFunction {
 		}else {
 			throw new RuntimeException("输入参数格式有误");
 		}
-
 	}
 
 	private static BigDecimal trans(Object ele){

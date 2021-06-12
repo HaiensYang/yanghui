@@ -9,6 +9,7 @@ import com.fr.general.FArray;
 import com.fr.general.GeneralUtils;
 import com.fr.intelli.record.Focus;
 import com.fr.intelli.record.Original;
+import com.fr.plugin.context.PluginContexts;
 import com.fr.record.analyzer.EnableMetrics;
 import com.fr.script.AbstractFunction;
 import com.fr.stable.StringUtils;
@@ -27,36 +28,46 @@ public class IRR extends AbstractFunction {
 		@Override
 		@Focus(id = "com.fr.plugin.function.finance", text = "Plugin-Test_Function_Finance", source = Original.PLUGIN)
 		public Object run(Object[] args) {
-			try{
-				if(1 == args.length){
-					return run( transArr( (FArray) args[0] ) );
-				}else if(2 == args.length){
-					return run( transArr( (FArray) args[0] ), trans( args[1] ) );
-				}else if(3==args.length){
-					return "参数个数不合格！";
-				}
-				else{
-					FArray<BigDecimal> cashflow = new FArray<BigDecimal>();
-					BigDecimal guess = new BigDecimal(0.1d);
-					for (int i = 0; i < args.length; i++) {
-						if(args[i] == null|| StringUtils.isBlank(args[i].toString())){
-							continue;
-						}
-						BigDecimal var = new BigDecimal(GeneralUtils.objectToString(args[i]).trim());
 
-						if ((var.compareTo(BigDecimal.ONE) <1) && (var.compareTo(BigDecimal.ZERO)>-1)) {
-							guess = var;
-						}else {
-							cashflow.add(var);
-						}
-					}
-					return run(cashflow,guess);
-				}
-			}catch(Exception e){
-				System.out.println(e);
+			if (PluginContexts.currentContext().isAvailable()) {
+				return cal(args);
+			} else {
+				return "插件未激活，请购买使用";
 			}
-			return ERROR_VALUE;
+
 		}
+
+	private Object cal(Object[] args) {
+		try{
+			if(1 == args.length){
+				return run( transArr( (FArray) args[0] ) );
+			}else if(2 == args.length){
+				return run( transArr( (FArray) args[0] ), trans( args[1] ) );
+			}else if(3==args.length){
+				return "参数个数不合格！";
+			}
+			else{
+				FArray<BigDecimal> cashflow = new FArray<BigDecimal>();
+				BigDecimal guess = new BigDecimal(0.1d);
+				for (int i = 0; i < args.length; i++) {
+					if(args[i] == null|| StringUtils.isBlank(args[i].toString())){
+						continue;
+					}
+					BigDecimal var = new BigDecimal(GeneralUtils.objectToString(args[i]).trim());
+
+					if ((var.compareTo(BigDecimal.ONE) <1) && (var.compareTo(BigDecimal.ZERO)>-1)) {
+						guess = var;
+					}else {
+						cashflow.add(var);
+					}
+				}
+				return run(cashflow,guess);
+			}
+		}catch(Exception e){
+			System.out.println(e);
+		}
+		return ERROR_VALUE;
+	}
 
 		/**
 		 * 将其他类型的数字转换为大数（保证精度）
