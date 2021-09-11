@@ -2,8 +2,8 @@
     <id>com.fr.plugin.function.finance</id>
     <name><![CDATA[财务函数插件]]></name>
     <active>yes</active>
-    <version>2.0</version>
-    <env-version>10.0</env-version>
+    <version>3.0</version>
+    <env-version>11.0</env-version>
     <jartime>2020-04-01</jartime>
     <vendor>yanghui</vendor>
     <description><![CDATA[可以实现Excel中的财务公式]]></description>
@@ -12,6 +12,9 @@
     ]]>
         <![CDATA[
       [2020-11-28]新增PPMT,IPMT,PV,FV,NPV,NPER,MIRR函数。<br/>
+    ]]>
+        <![CDATA[
+      [2021-09-11]环境10.0升级到11.0。<br/>
     ]]>
 
     </change-notes>
